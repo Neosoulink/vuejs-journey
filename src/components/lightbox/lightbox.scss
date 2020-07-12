@@ -1,0 +1,99 @@
+.lightbox{
+ background-color: rgba(#000, 0.5);
+ z-index: 200;
+}
+
+.lightbox__image{
+	position: fixed;
+}
+
+.lightbox__btn{
+	font-size: 40px;
+	transition: transform 0.3s;
+	height: 60px;
+	width: 60px;
+	padding-top: 0;
+	background-color: transparent;
+	border: none;
+	
+	&:hover{
+		transform: scale(1.2);
+		border: none;
+	}
+
+	&:focus {
+		transform: scale(1.2);
+		border: none;
+		box-shadow: none;
+	}
+
+	&::after{
+		padding: 0;
+		margin: 0;
+	}
+}
+
+.lightbox__close{
+	position: fixed;
+	top: 20px;
+	right: 20px;
+}
+
+.lightbox__nav{
+	position: fixed;
+	top: 20px;
+}
+
+.lightbox__nav .lightbox__prev,
+.lightbox__nav .lightbox__next{
+	
+}
+
+.lightbox__loading{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	width: 40px;
+	height: 40px;
+	padding: 10px;
+	margin-left: -20px;
+	margin-top: -20px;
+	background-color: rgba(#000, 0.8);
+	border-radius: 40px;
+	z-index: 300;
+
+	&:after{
+		content: '';
+		display: block;
+		width: 20px;
+		height: 20px;
+		background-color: #fff;
+		border-radius: 20px;
+		animation: lightbox-loading 1s ease infinite;
+	}
+
+	@keyframes lightbox-loading {
+		0%{
+			opacity: 0.5;
+			transform: scale(.75);
+		}
+
+		50% {
+			opacity: 1;
+			transform: scale(1);
+		}
+
+		100% {
+			opacity: 0.5;
+			transform: scale(.75);
+		}
+	}
+}
+
+.lightbox-fade-enter-active, .lightbox-fade-leave-active {
+	transition: opacity .5s;
+}
+
+.lightbox-fade-enter, .lightbox-fade-leave-to {
+	opacity: 0;
+}
