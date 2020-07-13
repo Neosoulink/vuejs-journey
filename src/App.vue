@@ -1,5 +1,9 @@
 <template>
 	<div id="app">
+		<!-- Users Part -->
+		<HomeUser/>
+
+		<!-- Light box part -->
 		<Lightbox />
 		<div class="mb-3 flex container">
 			<a
@@ -28,6 +32,7 @@
 			</div>
 		</div>
 
+		<!-- Slider part -->
 		<div class="container">
 			<carousel>
 				<carousel-slide v-for="n in slides" :key="n" :index="n-1">
@@ -41,16 +46,20 @@
 			<button @click="addSlide">Ajouter un slide</button>
 			<button @click="removeSlide">Enlever un slide</button>
 		</div>
+
+		<!-- Todolist part -->
 		<Todos />
 	</div>
 </template>
 
 <script>
+// Components
 import Todos from "./components/Todos.vue";
 import Carousel from "./components/carousels/Carousel";
 import CarouselSlide from "./components/carousels/CarouselSlide";
-
 import Lightbox from "./components/lightbox/Lightbox";
+
+import HomeUser from './components/users/Home'
 
 export default {
 	name: "App",
@@ -58,7 +67,8 @@ export default {
 		Todos,
 		Carousel,
 		CarouselSlide,
-		Lightbox
+		Lightbox,
+		HomeUser
 	},
 	data() {
 		return {

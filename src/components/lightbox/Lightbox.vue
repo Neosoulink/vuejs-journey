@@ -27,7 +27,7 @@ export default {
 		}
 	},
 	computed: {
-		image(){ 
+		image(){
 			if (this.state.index !== false && this.state.group ){
 				return this.state.images[this.state.group][this.state.index]	;
 			}
@@ -40,4 +40,4 @@ export default {
 		next() { Store.next(); }
 	},
 }
-</script> 
+</script>
