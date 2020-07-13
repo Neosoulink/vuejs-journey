@@ -1,88 +1,61 @@
 <template>
 	<div id="app">
-		<!-- Users Part -->
-		<HomeUser/>
-
-		<!-- Light box part -->
-		<Lightbox />
-		<div class="mb-3 flex container">
-			<a
-				:href="require(`./imgs/img (${n}).jpg`)"
-				class="position-relative d-inline-block mb-2 mr-2"
-				v-lightbox
-				v-for="n in 8"
-				:key="n"
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<router-link :to="{name: 'root'}" class="navbar-brand">Practice</router-link>
+			<button
+				class="navbar-toggler"
+				type="button"
+				data-toggle="collapse"
+				data-target="#navbarNavDropdown"
+				aria-controls="navbarNavDropdown"
+				aria-expanded="false"
+				aria-label="Toggle navigation"
 			>
-				<img :src="require(`./imgs/img (${n}).jpg`)" alt="lightImg" style="width: 200px;" />
-			</a>
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarNavDropdown">
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<router-link :to="{name: 'root'}" class="nav-link">Home</router-link>
+					</li>
 
-			<a
-				:href="require(`./imgs/code_(${n}).jpg`)"
-				class="position-relative d-inline-block mb-2 mr-2"
-				v-lightbox="'code'"
-				v-for="n in 8"
-				:key="`./imgs/img (${n}).jpg`"
-			>
-				<img :src="require(`./imgs/code_(${n}).jpg`)" alt="lightImg" style="width: 200px;" />
-			</a>
+					<li class="nav-item">
+						<router-link :to="{name: 'gallery'}" class="nav-link">Gallery</router-link>
+					</li>
 
-			<div>
-				<button @click="themeLightbox = '/'">DEFAULT</button>
-				<button @click="themeLightbox = 'code'">CODES</button>
+					<li class="nav-item">
+						<router-link :to="{name: 'users'}" class="nav-link">Users</router-link>
+					</li>
+
+					<li class="nav-item">
+						<router-link :to="{name: 'todos'}" class="nav-link">My todo</router-link>
+					</li>
+
+					<li class="nav-item">
+						<router-link :to="{name: 'about'}" class="nav-link">About</router-link>
+					</li>
+				</ul>
 			</div>
-		</div>
-
-		<!-- Slider part -->
-		<div class="container">
-			<carousel>
-				<carousel-slide v-for="n in slides" :key="n" :index="n-1">
-					<div
-						class="position-absolute w-100 text-light d-flex flex-column align-items-center justify-content-center h-100 font-weight-bold"
-						style="background-color: #00000088;font-size: 30px;"
-					>Slide {{n}}</div>
-					<img :src="require(`./imgs/img (${n}).jpg`)" alt="slide" class="w-100" />
-				</carousel-slide>
-			</carousel>
-			<button @click="addSlide">Ajouter un slide</button>
-			<button @click="removeSlide">Enlever un slide</button>
-		</div>
-
-		<!-- Todolist part -->
-		<Todos />
+		</nav>
+		<transition name="fade" mode="out-in">
+			<router-view></router-view>
+		</transition>
 	</div>
 </template>
 
 <script>
-// Components
-import Todos from "./components/Todos.vue";
-import Carousel from "./components/carousels/Carousel";
-import CarouselSlide from "./components/carousels/CarouselSlide";
-import Lightbox from "./components/lightbox/Lightbox";
-
-import HomeUser from './components/users/Home'
-
 export default {
 	name: "App",
-	components: {
-		Todos,
-		Carousel,
-		CarouselSlide,
-		Lightbox,
-		HomeUser
-	},
-	data() {
-		return {
-			slides: 2,
-			themeLightbox: "/"
-		};
-	},
-	methods: {
-		addSlide() {
-			this.slides++;
-		},
-		removeSlide() {
-			this.slides--;
-		}
-	}
+	components: {}
 };
 </script>
+
+<style lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+	transition: opacity 0.2s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+	opacity: 0;
+}
+</style>
