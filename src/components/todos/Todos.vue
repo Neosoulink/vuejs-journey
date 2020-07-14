@@ -38,19 +38,20 @@
 								<b-form-input
 									placeholder="Update"
 									class="form-control rounded-0 border-0 d-inline-block d-inline"
-									v-model="editing.name"
+									:value="editing.name"
 									v-focus="true"
 									@keyup.enter="doneTodo"
 									@blur="doneTodo"
-									@keyup.esc="cancelEdit"
-								></b-form-input>
+									@keyup.esc="cancelEdit($event)"
+								/>
 							</div>
 
-							<small class="text-muted ml-3">{{ todo.dateAdd }}</small>
-							<small class="text-success ml-3" v-if="todo.completed">Tâche completé</small>
 							<button type="button" class="close border-light" @click.prevent="deleteTodo(todo)">
 								<span aria-hidden="true">&times;</span>
 							</button>
+							<br />
+							<small class="text-muted ml-3">{{ todo.dateAdd }}</small>
+							<small class="text-success ml-3" v-if="todo.completed">Tâche completé</small>
 						</li>
 					</ul>
 
@@ -108,7 +109,6 @@ export default {
 			newTodos: "",
 			filter: "all",
 			editing: null,
-			oldTodoName: ""
 		};
 	},
 	methods: {
@@ -130,24 +130,24 @@ export default {
 			this.editing = todo;
 			this.oldTodoName = this.editing.name;
 		},
-		doneTodo() {
-			this.editing = null;
-			this.oldTodoName = "";
+		doneTodo(e) {
+			if (this.editing) {
+				this.$store.commit("UPDATE_TODO", {
+					todo: this.editing,
+					value: e.target.value
+				});
+			}
+			this.cancelEdit();
 		},
 		cancelEdit() {
-			this.editing.name = this.oldTodoName;
-			this.doneTodo();
+			this.editing = null;
 		},
 		deleteCompleted() {
-			this.$store.commit('DELETE_ALL_DONE');
+			this.$store.commit("DELETE_ALL_DONE");
 		}
 	},
 	computed: {
-		...Vuex.mapGetters([
-			"todos",
-			"completedTodos",
-			"remainingTodos",
-		]),
+		...Vuex.mapGetters(["todos", "completedTodos", "remainingTodos"]),
 		msg() {
 			return this.$store.state.msg;
 		},
@@ -155,8 +155,8 @@ export default {
 			get() {
 				return this.remainingTodos.length === 0;
 			},
-			set(value){
-				this.$store.commit('ALL_DONE', value);
+			set(value) {
+				this.$store.commit("ALL_DONE", value);
 			}
 		},
 		hasTodos() {

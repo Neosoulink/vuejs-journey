@@ -42,6 +42,9 @@ const mutations = {
 		state.todos.forEach(todo => {
 			todo.completed = value;
 		});
+	},
+	UPDATE_TODO(state, { todo, value }){
+		state.todos.filter(todo_ => todo_ === todo)[0].name = value
 	}
 }
 
