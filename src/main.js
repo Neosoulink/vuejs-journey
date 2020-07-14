@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import VueResource from 'vue-resource';
+import Vuex from 'vuex'
 import router from './router'
 
 import 'bootstrap/dist/css/bootstrap.css';
@@ -11,6 +12,7 @@ import App from './App.vue';
 
 Vue.use(router);
 Vue.use(VueResource);
+Vue.use(Vuex);
 Vue.use(BootstrapVue);
 
 Vue.config.productionTip = false;

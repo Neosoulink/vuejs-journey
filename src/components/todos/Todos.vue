@@ -1,6 +1,6 @@
 <template>
 	<section class="todoapp w-100">
-		<header class="header text-center py-3">
+		<header class="header text-center py-2">
 			<h1 class="display-2">Todos</h1>
 		</header>
 		<main class="main d-flex justify-content-center py-5">
@@ -19,7 +19,6 @@
 							></b-form-input>
 						</b-input-group>
 					</div>
-
 					<ul class="todos list-group list-group-flush">
 						<li
 							class="list-group-item todo"
@@ -27,36 +26,39 @@
 							:key="todo.id"
 							:class="{'text-muted': todo.completed}"
 						>
-							<b-form-checkbox class="mr-2 d-inline" v-model="todo.completed">
-								<span class="sr-only"></span>
-							</b-form-checkbox>
+							<input
+								type="checkbox"
+								:checked="todo.completed"
+								@input="setCompletedTodo(todo, $event)"
+								class="mr-2 d-inline"
+							/>
 
 							<label v-if="todo !== editing" @dblclick="update(todo)">{{ todo.name }}</label>
 							<div v-else>
 								<b-form-input
 									placeholder="Update"
 									class="form-control rounded-0 border-0 d-inline-block d-inline"
-                  v-model="editing.name"
-                  v-focus="true"
+									v-model="editing.name"
+									v-focus="true"
 									@keyup.enter="doneTodo"
 									@blur="doneTodo"
-                  @keyup.esc="cancelEdit"
+									@keyup.esc="cancelEdit"
 								></b-form-input>
 							</div>
 
 							<small class="text-muted ml-3">{{ todo.dateAdd }}</small>
 							<small class="text-success ml-3" v-if="todo.completed">Tâche completé</small>
-							<button type="button" class="close border-light" @click="deleteTodo(todo)">
+							<button type="button" class="close border-light" @click.prevent="deleteTodo(todo)">
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</li>
 					</ul>
-					
-					<footer class="p-3 bg-white" v-show="todos.length">
+
+					<footer class="p-3 bg-white" v-show="hasTodos">
 						<p class="text-muted">Infos & actions sur vos tâches</p>
 						<div class="row">
 							<small class="col-6">
-								<p>{{ remaining }} tâche(s) à faire</p>
+								<p>{{ remainingTodos.length }} tâche(s) à faire</p>
 							</small>
 							<div class="col">
 								<p class="text-muted mb-2">Filters</p>
@@ -81,12 +83,11 @@
 									href="javascript:void(0)"
 									@click.prevent="deleteCompleted"
 									class="btn btn-sm btn-light mb-1 w-100"
-									v-if="completed"
+									v-if="completedTodos.length"
 								>Suppr les faites</a>
 							</div>
 						</div>
 					</footer>
-
 				</div>
 			</div>
 		</main>
@@ -94,84 +95,90 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import moment from 'moment';
+import Vue from "vue";
+import Vuex from "vuex";
+import Store from "./TodosStore";
 
 export default {
+	store: Store,
 	name: "Todos",
 	data() {
 		return {
-			todos: [],
+			//todos: [],
 			newTodos: "",
-      filter: "all",
-      editing: null,
-      oldTodoName: ''
+			filter: "all",
+			editing: null,
+			oldTodoName: ""
 		};
 	},
 	methods: {
+		...Vuex.mapActions({
+			addTodoStore: "addTodo",
+			deleteTodo: "deleteTodo",
+			setCompletedTodo_: "setCompletedTodo"
+		}),
+		setCompletedTodo(todo, e) {
+			this.setCompletedTodo_({ todo: todo, value: e.target.checked });
+		},
 		addTodo() {
 			if (this.newTodos !== "") {
-				this.todos.unshift({
-					name: this.newTodos,
-					completed: false,
-					dateAdd: moment().format('DD/MM/YYYY à HH:mm:ss'),
-				});
+				this.addTodoStore(this.newTodos);
 				this.newTodos = "";
 			}
 		},
 		update(todo) {
-      this.editing = todo;
-      this.oldTodoName = this.editing.name;
-    },
-    doneTodo(){
-      this.editing = null;
-      this.oldTodoName = '';
-    },
-    cancelEdit(){
-      this.editing.name = this.oldTodoName;
-      this.doneTodo();
-    },
-		deleteTodo(todo) {
-			this.todos = this.todos.filter(i => i !== todo);
+			this.editing = todo;
+			this.oldTodoName = this.editing.name;
+		},
+		doneTodo() {
+			this.editing = null;
+			this.oldTodoName = "";
+		},
+		cancelEdit() {
+			this.editing.name = this.oldTodoName;
+			this.doneTodo();
 		},
 		deleteCompleted() {
-			this.todos = this.todos.filter(todo => !todo.completed);
+			this.$store.commit('DELETE_ALL_DONE');
 		}
 	},
 	computed: {
+		...Vuex.mapGetters([
+			"todos",
+			"completedTodos",
+			"remainingTodos",
+		]),
+		msg() {
+			return this.$store.state.msg;
+		},
 		allDone: {
 			get() {
-				return this.remaining === 0;
+				return this.remainingTodos.length === 0;
 			},
-			set(value) {
-				this.todos.forEach(todo => {
-					todo.completed = value;
-				});
+			set(value){
+				this.$store.commit('ALL_DONE', value);
 			}
 		},
-		remaining() {
-			return this.todos.filter(todo => !todo.completed).length;
-		},
-		completed() {
-			return this.todos.filter(todo => todo.completed).length;
+		hasTodos() {
+			return this.todos.length > 0;
 		},
 		filteredTodos() {
 			if (this.filter === "todo") {
-				return this.todos.filter(todo => !todo.completed);
+				return this.remainingTodos;
 			} else if (this.filter === "done") {
-				return this.todos.filter(todo => todo.completed);
+				return this.completedTodos;
 			}
 			return this.todos;
-    },
-  },
-  directives: {
-    focus (el, value) {
-      if (value) {
-        Vue.nextTick(() => {
-          el.focus();
-        })
-      }
-		},
-  }
+		}
+	},
+	directives: {
+		focus(el, value) {
+			if (value) {
+				Vue.nextTick(() => {
+					el.focus();
+				});
+			}
+		}
+	}
 };
 </script>

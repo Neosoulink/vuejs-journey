@@ -2,7 +2,7 @@
 <template>
 	<div>
 
-		<div class="position-fixed z3 w-100 h-100 top-0 left-0 loader-user-action d-flex justify-content-center align-items-center" v-if="loading">
+		<div class="position-fixed z3 w-100 h-100 loader-user-action d-flex justify-content-center align-items-center" v-if="loading">
 			<div class="spinner-grow text-light" role="status">
 				<span class="sr-only">Loading...</span>
 			</div>

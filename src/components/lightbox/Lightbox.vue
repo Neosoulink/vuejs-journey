@@ -1,7 +1,7 @@
 <style src="./lightbox.scss" lang="scss"></style>
 
 <template>
-	<div class="lightbox position-fixed top-0 left-0 h-100 w-100" v-if="image !== false" @click="close">
+	<div class="lightbox position-fixed h-100 w-100" v-if="image !== false" @click="close">
 		<transition name="lightbox-fade">
 			<Lightbox-image :image="image" :key="image" />
 		</transition>
