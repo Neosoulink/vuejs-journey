@@ -1,4 +1,4 @@
-# tp_graf-vuejs
+# graf-vuejs
 
 ## Project setup
 ```
