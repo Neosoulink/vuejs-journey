@@ -1,4 +1,10 @@
-# tp_graf-vuejs
+# graf-vuejs
+
+## Features
+- Gallery & silders
+- Users gestion with vue resource
+- Vuex todos gestion
+- Vue router integreated
 
 ## Project setup
 ```
